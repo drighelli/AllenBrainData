@@ -1,0 +1,136 @@
+---
+title: "Obtaining scRNA-seq data from Allen Brain Annotation"
+author: 
+- name: Dario Righelli
+  affiliation: Department of Statistical Sciences, University of Padova
+- name: Davide Risso
+  affiliation: Department of Statistical Sciences, University of Padova
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+package: AllenBrainData
+output:
+  BiocStyle::html_document:
+    toc_float: true
+vignette: |
+  %\VignetteIndexEntry{Obtaining scRNA-seq data from Allen Brain Annotation}
+  %\VignetteEngine{knitr::rmarkdown}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r style, echo=FALSE, results='asis'}
+BiocStyle::markdown()
+```
+
+# Introduction 
+
+The `r Biocpkg("AllenBrainData")` package provides a _R_ /
+_Bioconductor_ resource for representing and manipulating 
+
+1. [Allen_Mouse_2020][Allen_Mouse_2020]
+2. [Allen_Mouse_2019][Allen_Mouse_2019]
+3. [Allen_Human_2020][Allen_Human_2020]
+4. [Allen_Human_2019][Allen_Human_2019]
+
+The number in the `dataset` title is roughly the number of cells in the experiment.
+
+This package makes extensive use of the `r Biocpkg("HDF5Array")` package 
+to avoid loading the entire data set in memory, instead storing 
+the counts on disk as a HDF5 file and loading subsets of the 
+data into memory upon request.
+
+**Note:** The purpose of this package is to provide testing and example data for _Bioconductor_ packages. We have done no processing of the "filtered" 10X scRNA-RNA data; it is delivered as is.
+
+<!-- # Work flow -->
+
+<!-- ## Loading the data -->
+
+<!-- We use the `TENxPBMCData` function to download the relevant files -->
+<!-- from _Bioconductor_'s ExperimentHub web resource. This includes the -->
+<!-- HDF5 file containing the counts, as well as the metadata on the rows -->
+<!-- (genes) and columns (cells). The output is a single -->
+<!-- `SingleCellExperiment` object from the `r Biocpkg("SingleCellExperiment")`  -->
+<!-- package. This is equivalent to a `SummarizedExperiment` class but -->
+<!-- with a number of features specific to single-cell data. -->
+
+<!-- ```{r} -->
+<!-- library(TENxPBMCData) -->
+<!-- tenx_pbmc4k <- TENxPBMCData(dataset = "pbmc4k") -->
+<!-- tenx_pbmc4k -->
+<!-- ``` -->
+
+<!-- **Note:** of particular interest to some users might be the `pbmc68k` dataset for its size. -->
+
+<!-- The first call to `TENxPBMCData()` may take some time due to the -->
+<!-- need to download some moderately large files. The files are then -->
+<!-- stored locally such that ensuing calls in the same or new sessions are -->
+<!-- fast. Use the `dataset` argument to select which dataset to download; values are visible through the function definition: -->
+
+<!-- ```{r} -->
+<!-- args(TENxPBMCData) -->
+<!-- ``` -->
+
+<!-- The count matrix itself is represented as a `DelayedMatrix` from the -->
+<!-- `r Biocpkg("DelayedArray")` package. This wraps the underlying HDF5 -->
+<!-- file in a container that can be manipulated in R. Each count -->
+<!-- represents the number of unique molecular identifiers (UMIs) assigned -->
+<!-- to a particular gene in a particular cell. -->
+
+<!-- ```{r} -->
+<!-- counts(tenx_pbmc4k) -->
+<!-- ``` -->
+
+<!-- ## Exploring the data -->
+
+<!-- To quickly explore the data set, we compute some summary statistics on -->
+<!-- the count matrix. We tell the `r Biocpkg("DelayedArray")` block -->
+<!-- size to indicate that we can use up to 1 GB of memory for loading the -->
+<!-- data into memory from disk. -->
+
+<!-- ```{r} -->
+<!-- options(DelayedArray.block.size=1e9) -->
+<!-- ``` -->
+
+<!-- We are interested in library sizes `colSums(counts(tenx_pbmc4k))`, number of -->
+<!-- genes expressed per cell `colSums(counts(tenx_pbmc4k) != 0)`, and average -->
+<!-- expression across cells `rowMeans(counts(tenx_pbmc4k))`. A naive implement -->
+<!-- might be -->
+
+<!-- ```{r, eval = FALSE} -->
+<!-- lib.sizes <- colSums(counts(tenx_pbmc4k)) -->
+<!-- n.exprs <- colSums(counts(tenx_pbmc4k) != 0L) -->
+<!-- ave.exprs <- rowMeans(counts(tenx_pbmc4k)) -->
+<!-- ``` -->
+
+<!-- More advanced analysis procedures are implemented in various -->
+<!-- _Bioconductor_ packages - see the `SingleCell` biocViews for more -->
+<!-- details. -->
+
+<!-- ## Saving computations -->
+
+<!-- Saving the `tenx_pbmc4k` object in a standard manner, e.g., -->
+
+<!-- ```{r, eval=FALSE} -->
+<!-- destination <- tempfile() -->
+<!-- saveRDS(tenx_pbmc4k, file = destination) -->
+<!-- ``` -->
+
+<!-- saves the row-, column-, and meta-data as an _R_ object, and remembers -->
+<!-- the location and subset of the HDF5 file from which the object is -->
+<!-- derived. The object can be read into a new _R_ session with -->
+<!-- `readRDS(destination)`, provided the HDF5 file remains in it's -->
+<!-- original location. -->
+
+
+# Session information
+
+```{r}
+sessionInfo()
+```
+
+[tenx]: https://support.10xgenomics.com/single-cell-gene-expression/datasets
+[pbmc68k]: https://support.10xgenomics.com/single-cell-gene-expression/datasets/1.1.0/fresh_68k_pbmc_donor_a
+[frozen_pbmc_donor_a]: https://support.10xgenomics.com/single-cell-gene-expression/datasets/1.1.0/frozen_pbmc_donor_a
+[frozen_pbmc_donor_b]: https://support.10xgenomics.com/single-cell-gene-expression/datasets/1.1.0/frozen_pbmc_donor_b

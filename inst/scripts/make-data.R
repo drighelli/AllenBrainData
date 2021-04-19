@@ -75,7 +75,8 @@ AMM <- as(sink, "HDF5Array")
 rownames(AMM) <- genes
 colnames(AMM) <- sampnames
 
-saveHDF5SummarizedExperiment(x=AMM, dir="Allen_Mouse_Brain_2020", prefix="Allen_mmu_20")
+saveHDF5SummarizedExperiment(x=AMM, dir="Allen_Mouse_Brain_2020",
+                        prefix="Allen_mmu_20")
 
 
 

@@ -4,16 +4,17 @@ Version: 0.0.0.9000
 Authors@R: c(
     person(given = "Dario",
            family = "Righelli",
-           role = c("aut", "cre"),
-           email = "dario.righelli@gmail.com")
+           role = c("aut", "cre", "mnt"),
+           email = "dario.righelli@gmail.com"),
     person(given = "Davide",
            family = "Risso",
-           role = c("aut", "cre"),
+           role = c("aut"),
            email = "risso.davide@gmail.com")
     )
 Description: Brain reference data from Allen Brain Atlas.
 License: `use_mit_license()`
 Encoding: UTF-8
+biocViews: ExperimentHub, ExperimentData, SingleCellData, RNASeqData
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
